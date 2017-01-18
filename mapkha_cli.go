@@ -23,6 +23,8 @@ func init() {
 }
 
 func main() {
+	flag.Parse()
+
 	var dict *m.Dict
 	var e error
 	if dixPath == "" {
