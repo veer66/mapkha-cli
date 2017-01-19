@@ -2,8 +2,11 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 
@@ -17,6 +20,8 @@ func check(e error) {
 }
 
 var dixPath string
+var cpuprofile string
+var memprofile string
 
 func init() {
 	flag.StringVar(&dixPath, "dix", "", "Dictionary path")
@@ -34,7 +39,11 @@ func main() {
 	}
 	check(e)
 	wordcut := m.NewWordcut(dict)
-	scanner := bufio.NewScanner(os.Stdin)
+	b, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal("could not read input:", err)
+	}
+	scanner := bufio.NewScanner(bytes.NewReader(b))
 	for scanner.Scan() {
 		fmt.Println(strings.Join(wordcut.Segment(scanner.Text()), "|"))
 	}
